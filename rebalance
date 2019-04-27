@@ -1,0 +1,17 @@
+# 依本策略的买入信号，得到应该买的股票列表
+# 借用买入信号结果，不需额外输入
+# 输入：context（见API）
+# 参数分析可用此函数，实盘会造成大量资金闲置
+def rebalance(context, sort_list, start_q, end_q):
+
+    total_number = len(sort_list)
+    holding_list = sort_list[start_q * total_number / 100 : end_q * total_number / 100]
+    every_stock = context.portfolio.portfolio_value/len(holding_list)
+
+    for stock_to_sell in list(context.portfolio.positions.keys()):
+        if stock_to_sell not in holding_list:
+            order_target_value(stock_to_sell, 0)
+    for stock_to_buy in holding_list: 
+        order_target_value(stock_to_buy, every_stock)
+    for stock_to_buy in holding_list: 
+        order_target_value(stock_to_buy, every_stock)
