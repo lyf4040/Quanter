@@ -1,0 +1,48 @@
+def get_data(periods):
+    q = query(valuation.code, income.statDate, income.pubDate)
+    df = get_fundamentals(q)
+    df.index = df.code
+    stat_dates = set(df.statDate)
+    stat_date_stocks = { sd:[stock for stock in df.index if df['statDate'][stock]==sd] for sd in stat_dates }
+    Quarter_stocks = {}
+    for tempDate in list(stat_date_stocks.keys()):
+        quarters = tempDate[:4]+'q'+str(int(tempDate[5:7])/3)
+        Quarter_stocks[quarters] = stat_date_stocks[tempDate]
+    tempDate = list(stat_dates)[0]
+    
+    minQuarter = tempDate[:4]+'q'+str(int(tempDate[5:7])/3)
+    maxQuarter = tempDate[:4]+'q'+str(int(tempDate[5:7])/3)
+    for tempDate in list(stat_dates):
+        quarters = tempDate[:4]+'q'+str(int(tempDate[5:7])/3)
+        if tempDate[:4] < minQuarter[:4]:
+            minQuarter = quarters
+        if tempDate[:4] == minQuarter[:4] and quarters[-1]<minQuarter[-1]:
+            minQuarter = quarters
+    
+    for tempDate in list(stat_dates):
+        quarters = tempDate[:4]+'q'+str(int(tempDate[5:7])/3)
+        if tempDate[:4] > maxQuarter[:4]:
+            maxQuarter = quarters
+        if tempDate[:4] == maxQuarter[:4] and quarters[-1]>maxQuarter[-1]:
+            maxQuarter = quarters
+            
+    #print (minQuarter)    
+        
+    def quarter_push(quarter):
+        if quarter[-1]!='1':
+            return quarter[:-1]+str(int(quarter[-1])-1)
+        else:
+            return str(int(quarter[:4])-1)+'q4'
+
+
+    stat_date_panels = { sd:None for sd in stat_dates }
+
+    for sd in stat_dates:
+        quarters = [sd[:4]+'q'+str(int(sd[5:7])/3)]
+        for i in range(periods-1):
+            quarters.append(quarter_push(quarters[-1]))
+        
+        #print (sd)
+        #print (quarters)
+        
+    return Quarter_stocks[maxQuarter]   
