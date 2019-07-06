@@ -1,0 +1,4 @@
+staDate = get_security_info(security).start_date
+curDate = context.previous_date
+if (curDate-staDate).days<100:
+                continue
