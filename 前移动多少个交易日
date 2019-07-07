@@ -1,0 +1,8 @@
+def ShiftTradingDay(date,shift):
+    # 获取所有的交易日，返回一个包含所有交易日的 list,元素值为 datetime.date 类型.
+    tradingday = get_all_trade_days()
+    # 得到date之后shift天那一天在列表中的行标号 返回一个数
+    date = datetime.date(int(str(date)[:4]),int(str(date)[5:7]),int(str(date)[8:10]))
+    shiftday_index = list(tradingday).index(date)+shift
+    # 根据行号返回该日日期 为datetime.date类型
+    return tradingday[shiftday_index] 
