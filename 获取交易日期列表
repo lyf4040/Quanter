@@ -1,0 +1,20 @@
+#获取日期列表
+def get_tradeday_list(start,end,frequency=None,count=None):
+    if count != None:
+        df = get_price('000001.XSHG',end_date=end,count=count)
+    else:
+        df = get_price('000001.XSHG',start_date=start,end_date=end)
+    if frequency == None or frequency =='day':
+        return df.index
+    else:
+        df['year-month'] = [str(i)[0:7] for i in df.index]
+        if frequency == 'month':
+            return df.drop_duplicates('year-month').index
+        elif frequency == 'quarter':
+            df['month'] = [str(i)[5:7] for i in df.index]
+            df = df[(df['month']=='01') | (df['month']=='04') | (df['month']=='07') | (df['month']=='10') ]
+            return df.drop_duplicates('year-month').index
+        elif frequency =='halfyear':
+            df['month'] = [str(i)[5:7] for i in df.index]
+            df = df[(df['month']=='01') | (df['month']=='06')]
+            return df.drop_duplicates('year-month').index 
