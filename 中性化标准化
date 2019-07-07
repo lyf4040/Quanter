@@ -1,0 +1,3 @@
+factor_df = standardlize(factor_df, inf2nan=True, axis=0) #对每列做标准化处理
+factor_df = neutralize(factor_df, how=['market_cap','sw_l1'], date=date_1, axis=0,fillna='sw_l1')#中性化
+  
